@@ -1,3 +1,5 @@
+const clipboardBuffer = document.querySelector("#clipboard-buffer");
+
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (
     message.target !== "offscreen" ||
@@ -6,10 +8,25 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return false;
   }
 
-  navigator.clipboard.writeText(message.text).then(
-    () => sendResponse({ ok: true }),
-    (error) => sendResponse({ ok: false, error: error.message }),
-  );
+  clipboardBuffer.value = message.text;
+  clipboardBuffer.select();
 
-  return true;
+  try {
+    const copied = document.execCommand("copy");
+    if (!copied) {
+      sendResponse({
+        ok: false,
+        error: "The clipboard copy command was rejected.",
+      });
+      return false;
+    }
+
+    sendResponse({ ok: true });
+  } catch (error) {
+    sendResponse({ ok: false, error: error.message });
+  } finally {
+    clipboardBuffer.value = "";
+  }
+
+  return false;
 });

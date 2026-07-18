@@ -46,8 +46,12 @@ test("targets the offscreen document and requires an explicit result", async () 
   );
   assert.match(background, /if \(!response\?\.ok\)/);
   assert.match(offscreen, /message\.target !== "offscreen"/);
-  assert.match(offscreen, /navigator\.clipboard\.writeText\(message\.text\)/);
+  assert.match(offscreen, /clipboardBuffer\.value = message\.text/);
+  assert.match(offscreen, /clipboardBuffer\.select\(\)/);
+  assert.match(offscreen, /document\.execCommand\("copy"\)/);
+  assert.doesNotMatch(offscreen, /navigator\.clipboard\.writeText/);
   assert.match(offscreen, /sendResponse\(\{\s*ok:\s*true\s*\}\)/);
+  assert.match(html, /<textarea[^>]+id="clipboard-buffer"/);
   assert.match(html, /<script[^>]+type="module"[^>]+src="offscreen\.js"/);
 });
 
