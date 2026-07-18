@@ -4,59 +4,66 @@
 
 - Task: Build and publish Copy Selected Tab URLs
 - Notion: https://app.notion.com/p/Chrome-URL-OSS-3a02f5910ab78191b6a2c537fd274a91
-- Branch: main (planning baseline only)
-- Worktree: /Users/ryo/Repo/oss/copy-selected-tab-urls
+- Branch: codex/copy-selected-tab-urls
+- Worktree: /Users/ryo/.codex/worktrees/3cb7/copy-selected-tab-urls
 - Mode: interactive
 
 ## Current State
 
-The product design is approved. The repository contains planning and governance
-artifacts only; extension implementation has intentionally not started.
+Implementation and local automated verification are complete. Popup and
+offscreen clipboard integration passed in an isolated Chrome for Testing 149
+profile. The branch has not been pushed and no pull request has been created.
 
 ## Completed Work
 
-- Confirmed that Chrome exposes highlighted tabs through the Tabs API.
-- Approved a popup preview flow plus a direct-copy shortcut.
-- Approved one-URL-per-line output in tab-strip order.
-- Approved Manifest V3, dependency-free JavaScript, and an offscreen clipboard
-  document.
-- Recorded the design, ADR, implementation plan, MIT license, and agent rules.
-- Created the Notion task.
+- Added a dependency-free Manifest V3 extension and Node test harness.
+- Added shared URL filtering, tab-strip ordering, and newline formatting.
+- Added an accessible popup preview and copy flow.
+- Added the command service worker, concurrency-safe offscreen lifecycle,
+  targeted clipboard messaging, and badge feedback.
+- Replaced focus-dependent offscreen Clipboard API usage after real Chrome
+  verification exposed `Document is not focused`; the offscreen document now
+  uses the Chrome-documented DOM selection copy pattern.
+- Added public README, contribution, security, privacy, permission, testing,
+  and limitation documentation.
+- Created six focused local commits from `068a445` through `898faee`.
 
 ## Pending Work
 
-- Create a Codex implementation worktree from the repository's default branch.
-- Move the Notion task from Create to Doing.
-- Execute `.plans/copy-selected-tab-urls/plan.md` task by task with TDD.
-- Verify the unpacked extension in Chrome.
-- Push an implementation branch and open a pull request for review.
+- Physically press the assigned shortcut in Chrome and verify the clipboard
+  payload and badge clear behavior. macOS Accessibility blocked automated key
+  injection.
+- Manually exercise zero-result, unavailable-URL, and error badge cases where a
+  practical Chrome tab/error fixture is available.
+- Manually follow the README's native **Load unpacked** directory chooser. The
+  extension was loaded by an isolated Chrome for Testing launch instead.
+- Obtain approval before pushing `codex/copy-selected-tab-urls` or creating a
+  pull request.
 
 ## Blockers / Decisions
 
-- Do not implement on `main`.
-- Do not add output formats, settings, Firefox support, analytics, or Chrome Web
-  Store publishing.
-- The shortcut must copy immediately through an offscreen document.
-- The popup must preview the exact ordered payload before copying.
+- Chrome for Testing assigned `Command+Shift+L`, but `System Events` rejected
+  automated keystrokes with error 1002. Do not claim the physical shortcut was
+  manually exercised.
+- Keep URL-only output, one URL per line. Do not add settings, Firefox support,
+  analytics, external requests, or Chrome Web Store publishing.
 
 ## Verification
 
-- The target local and GitHub repositories did not exist before setup.
-- Node.js v24.17.0 is available.
-- Google Chrome 150.0.7871.127 is available.
-- The approved Chrome API design is documented in the design and ADR.
-- The plan resolver returned
-  `/Users/ryo/Repo/oss/copy-selected-tab-urls/.plans/copy-selected-tab-urls/plan.md`.
-- The plan artifact was queued locally as `plan-copy-selected-tab-urls`.
-- Best-effort artifact upload was not run because the approval review rejected
-  exporting the broader pending local queue.
+- `npm test`: 13 tests passed, 0 failed after the offscreen fix.
+- Chrome for Testing `149.0.7827.55` loaded
+  `src/background.js` with zero captured service-worker console errors.
+- Popup document: single-tab and three-tab display/status/system clipboard
+  checks passed in tab-strip order.
+- Offscreen document: targeted message returned `{ "ok": true }` and the
+  system clipboard matched the three-tab payload.
+- Chrome reported the assigned shortcut as `⇧⌘L`.
+- Physical shortcut event and badge outcome were not verified because macOS
+  Accessibility denied synthetic keystrokes.
 
 ## Next Agent Instructions
 
-1. Read `AGENTS.md`, this handoff, the plan, the design document, and the ADR.
-2. Run `git status --short --branch` and compare the latest commit with this
-   handoff.
-3. Create or confirm a non-main implementation branch/worktree.
-4. Run the prerequisite checks from the plan.
-5. Use the executing-plans and test-driven-development skills.
-6. Continue only from Task 1; do not redo product planning.
+1. Read this handoff and the remaining unchecked plan items.
+2. Run the final verification commands fresh before any completion claim.
+3. Ask the user to choose the development-branch integration option.
+4. Before push or PR creation, show the exact commands and obtain approval.
