@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Copy Selected Tab URLs",
+  "version": "0.1.0",
+  "description": "Copy highlighted Chrome tab URLs in tab-strip order.",
+  "minimum_chrome_version": "109",
+  "permissions": [
+    "tabs",
+    "offscreen",
+    "clipboardWrite"
+  ],
+  "action": {
+    "default_popup": "src/popup.html"
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "commands": {
+    "copy-selected-tab-urls": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Copy selected tab URLs"
+    }
+  }
+}
