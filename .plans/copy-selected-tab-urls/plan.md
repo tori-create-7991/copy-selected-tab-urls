@@ -164,11 +164,11 @@ Codex implementation task. Do not implement extension code on `main`.
 - [x] Confirm a single selected tab copies one URL from the popup document.
 - [x] Confirm a multi-tab selection copies in tab-strip order from the popup
   document.
-- [ ] Confirm the same multi-tab selection through the physical shortcut.
-  Automated key injection was blocked by macOS Accessibility; Chrome assigned
-  the suggested shortcut and the offscreen clipboard path passed separately.
-- [ ] Confirm a tab without an available URL is omitted.
-- [ ] Confirm the badge clears after success, zero results, and errors.
+- [x] Confirm the same multi-tab selection through the physical shortcut.
+  The user completed the physical Chrome check after automated key injection
+  was blocked by macOS Accessibility.
+- [x] Confirm a tab without an available URL is omitted.
+- [x] Confirm the badge clears after success, zero results, and errors.
 
 ## Task 5: Prepare the public OSS documentation
 
@@ -193,9 +193,8 @@ Codex implementation task. Do not implement extension code on `main`.
 - [x] Verify that documentation contains no local absolute paths or private
   Notion links outside `.plans/`.
 - [x] Run `npm test`.
-- [ ] Manually follow the README installation steps. The native Chrome
-  directory chooser was not exposed to automation; command-line unpacked
-  loading was verified in an isolated Chrome for Testing profile instead.
+- [x] Manually follow the README installation steps. The user confirmed the
+  native unpacked-extension installation flow.
 - [x] Commit with `docs: OSS公開用ドキュメントを整備`.
 
 **Acceptance criteria:**
@@ -207,7 +206,7 @@ Codex implementation task. Do not implement extension code on `main`.
 ## Final checkpoint
 
 - [x] `npm test` exits 0 (21 tests, 0 failures after PR review follow-up).
-- [ ] All popup and shortcut manual checks pass.
+- [x] All popup and shortcut manual checks pass.
 - [x] `git diff --check` exits 0.
 - [x] No secrets, tokens, analytics, remote scripts, or unnecessary permissions
   are present.

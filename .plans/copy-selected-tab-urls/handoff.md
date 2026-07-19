@@ -10,9 +10,8 @@
 
 ## Current State
 
-Implementation and local automated verification are complete. Popup and
-offscreen clipboard integration passed in an isolated Chrome for Testing 149
-profile. The branch is pushed and pull request
+Implementation, automated verification, PR review, and user-run physical
+Chrome verification are complete. The branch is pushed and pull request
 https://github.com/tori-create-7991/copy-selected-tab-urls/pull/1 is open.
 
 ## Completed Work
@@ -30,25 +29,26 @@ https://github.com/tori-create-7991/copy-selected-tab-urls/pull/1 is open.
 - Addressed pre-PR and PR review findings for Chrome 109 compatibility,
   optional command tab input, badge concurrency and clearing, diagnostic
   logging, and behavior-level background tests.
-- Created nine focused commits, including the PR review follow-up.
+- Completed browser-level popup checks for ordering, empty/error states,
+  diagnostic logs, and keyboard focus.
+- The user confirmed the native unpacked installation, popup clipboard,
+  physical shortcut, payload, and badge behavior all pass.
+- Created ten focused commits, including this manual-verification update.
 
 ## Pending Work
 
-- Physically press the assigned shortcut in Chrome and verify the clipboard
-  payload and badge clear behavior. macOS Accessibility blocked automated key
-  injection.
-- Manually exercise zero-result, unavailable-URL, and error badge cases where a
-  practical Chrome tab/error fixture is available.
-- Manually follow the README's native **Load unpacked** directory chooser. The
-  extension was loaded by an isolated Chrome for Testing launch instead.
-- Complete the remaining physical manual checks, then update the open pull
-  request with their result.
+- Update the pull request body from 19 to 21 automated tests and include the
+  completed manual-verification result.
+- Post the completed three-perspective review result to GitHub after obtaining
+  explicit approval.
+- Merge the pull request when approved; the Notion task remains **Doing** until
+  merge.
 
 ## Blockers / Decisions
 
-- Chrome for Testing assigned `Command+Shift+L`, but `System Events` rejected
-  automated keystrokes with error 1002. Do not claim the physical shortcut was
-  manually exercised.
+- Automated shortcut injection remains unavailable because macOS Accessibility
+  rejected `System Events`, but the user physically exercised the shortcut and
+  confirmed it passes.
 - Keep URL-only output, one URL per line. Do not add settings, Firefox support,
   analytics, external requests, or Chrome Web Store publishing.
 
@@ -62,13 +62,13 @@ https://github.com/tori-create-7991/copy-selected-tab-urls/pull/1 is open.
 - Offscreen document: targeted message returned `{ "ok": true }` and the
   system clipboard matched the three-tab payload.
 - Chrome reported the assigned shortcut as `⇧⌘L`.
-- Physical shortcut event and badge outcome were not verified because macOS
-  Accessibility denied synthetic keystrokes.
+- User-run physical Chrome verification: native unpacked installation, popup
+  copy, multi-tab shortcut payload, copied-count badge, and timed badge clear
+  all passed.
 
 ## Next Agent Instructions
 
-1. Read this handoff and the remaining unchecked plan items.
-2. Run the final verification commands fresh before any completion claim.
-3. Manually verify the physical shortcut, clipboard result, and badge.
-4. Before any additional push or GitHub review post, show the exact action and
-   obtain approval.
+1. Read this handoff and confirm the worktree remains clean.
+2. Obtain approval before the additional push, PR body update, or GitHub review
+   post.
+3. Merge only after explicit approval, then move the Notion task to **Done**.
