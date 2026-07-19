@@ -1,7 +1,7 @@
 export function getCopyableTabs(tabs) {
   return tabs
     .filter(({ url }) => typeof url === "string" && url.length > 0)
-    .toSorted((left, right) => left.index - right.index);
+    .sort((left, right) => left.index - right.index);
 }
 
 export function formatTabUrls(tabs) {

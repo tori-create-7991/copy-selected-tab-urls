@@ -74,3 +74,28 @@ test("joins URLs with newlines and no trailing newline", async () => {
     "https://example.com/one\nhttps://example.com/two",
   );
 });
+
+test("works when Array.prototype.toSorted is unavailable", async () => {
+  const { getCopyableTabs } = await loadTabUrls();
+  const originalToSorted = Array.prototype.toSorted;
+
+  Array.prototype.toSorted = undefined;
+
+  try {
+    const tabs = [
+      { index: 2, url: "https://example.com/two" },
+      { index: 1, url: "https://example.com/one" },
+    ];
+
+    let copyableTabs;
+    assert.doesNotThrow(() => {
+      copyableTabs = getCopyableTabs(tabs);
+    });
+    assert.deepEqual(
+      copyableTabs.map(({ url }) => url),
+      ["https://example.com/one", "https://example.com/two"],
+    );
+  } finally {
+    Array.prototype.toSorted = originalToSorted;
+  }
+});

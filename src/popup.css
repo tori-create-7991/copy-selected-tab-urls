@@ -34,6 +34,7 @@ ul {
 li {
   min-width: 0;
   padding-bottom: 8px;
+  border-bottom: 1px solid GrayText;
   border-bottom: 1px solid color-mix(in srgb, CanvasText 20%, transparent);
 }
 

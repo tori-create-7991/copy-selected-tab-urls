@@ -39,7 +39,8 @@ async function loadTabs() {
     status.textContent = `${copyableTabs.length} selected ${
       copyableTabs.length === 1 ? "tab" : "tabs"
     }.`;
-  } catch {
+  } catch (error) {
+    console.error("Failed to load selected tabs.", error);
     status.textContent = "Could not read the selected tabs.";
   }
 }
@@ -52,7 +53,8 @@ copyButton.addEventListener("click", async () => {
     status.textContent = `Copied ${copyableTabs.length} ${
       copyableTabs.length === 1 ? "URL" : "URLs"
     }.`;
-  } catch {
+  } catch (error) {
+    console.error("Failed to copy selected tab URLs.", error);
     status.textContent = "Could not copy URLs. Check clipboard access and retry.";
   }
 });

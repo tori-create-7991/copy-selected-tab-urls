@@ -6,6 +6,7 @@ const BADGE_DURATION_MS = 2_000;
 
 let creatingOffscreenDocument;
 let badgeTimeout;
+let badgeUpdate = Promise.resolve();
 
 async function offscreenDocumentExists() {
   const offscreenUrl = chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH);
@@ -42,10 +43,15 @@ async function ensureOffscreenDocument() {
 }
 
 async function copySelectedTabUrls(windowId) {
-  const tabs = await chrome.tabs.query({
-    highlighted: true,
-    windowId,
-  });
+  const query = { highlighted: true };
+
+  if (windowId === undefined) {
+    query.lastFocusedWindow = true;
+  } else {
+    query.windowId = windowId;
+  }
+
+  const tabs = await chrome.tabs.query(query);
   const copyableTabs = getCopyableTabs(tabs);
   const payload = formatTabUrls(copyableTabs);
 
@@ -67,12 +73,19 @@ async function copySelectedTabUrls(windowId) {
   return copyableTabs.length;
 }
 
-async function showBadge(text) {
-  clearTimeout(badgeTimeout);
-  await chrome.action.setBadgeText({ text });
-  badgeTimeout = setTimeout(() => {
-    chrome.action.setBadgeText({ text: "" });
-  }, BADGE_DURATION_MS);
+function showBadge(text) {
+  const update = badgeUpdate.catch(() => {}).then(async () => {
+    clearTimeout(badgeTimeout);
+    await chrome.action.setBadgeText({ text });
+    badgeTimeout = setTimeout(() => {
+      chrome.action
+        .setBadgeText({ text: "" })
+        .catch((error) => console.error("Failed to clear the badge.", error));
+    }, BADGE_DURATION_MS);
+  });
+
+  badgeUpdate = update;
+  return update;
 }
 
 chrome.commands.onCommand.addListener(async (command, tab) => {
@@ -81,9 +94,15 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
   }
 
   try {
-    const count = await copySelectedTabUrls(tab.windowId);
+    const count = await copySelectedTabUrls(tab?.windowId);
     await showBadge(String(count));
-  } catch {
-    await showBadge("!");
+  } catch (error) {
+    console.error("Failed to copy selected tab URLs.", error);
+
+    try {
+      await showBadge("!");
+    } catch (badgeError) {
+      console.error("Failed to show the error badge.", badgeError);
+    }
   }
 });

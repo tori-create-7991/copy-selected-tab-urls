@@ -19,10 +19,10 @@ test("handles only the approved direct-copy command in its window", async () => 
 
   assert.match(script, /const COMMAND_NAME = "copy-selected-tab-urls"/);
   assert.match(script, /if \(command !== COMMAND_NAME\)/);
-  assert.match(
-    script,
-    /chrome\.tabs\.query\(\{\s*highlighted:\s*true,\s*windowId,?\s*\}\)/,
-  );
+  assert.match(script, /const query = \{\s*highlighted:\s*true\s*\}/);
+  assert.match(script, /query\.windowId = windowId/);
+  assert.match(script, /query\.lastFocusedWindow = true/);
+  assert.match(script, /chrome\.tabs\.query\(query\)/);
 });
 
 test("serializes offscreen clipboard creation and skips it for no URLs", async () => {
