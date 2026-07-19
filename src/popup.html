@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Copy Selected Tab URLs</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main>
+      <h1>Selected tabs</h1>
+      <ul id="tab-list" aria-label="Selected tabs"></ul>
+      <button id="copy-button" type="button" disabled>Copy URLs</button>
+      <p id="status" role="status" aria-live="polite">Loading selected tabs…</p>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

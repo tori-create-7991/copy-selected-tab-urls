@@ -87,7 +87,9 @@ flowchart LR
   command's window, ensures the offscreen document exists, delegates the
   clipboard write, and updates the badge.
 - `src/offscreen.html` and `src/offscreen.js` provide DOM clipboard access for
-  the service worker flow.
+  the service worker flow. The small document is intentionally reused after
+  its first creation to avoid create/close races between concurrent commands;
+  its textarea is cleared after every copy.
 
 No content script is required.
 

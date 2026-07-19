@@ -1,21 +1,93 @@
 # Copy Selected Tab URLs
 
-Copy the URLs of Chrome tabs highlighted with Command/Ctrl-click or Shift-click.
+Copy the URLs of highlighted Chrome tabs, one per line and in tab-strip order.
 
-This repository is currently in the planning stage. The approved design,
-architecture decisions, and implementation plan are available in:
+## Features
 
-- `docs/design/copy-selected-tab-urls.md`
-- `docs/adr/0001-use-manifest-v3-with-offscreen-clipboard.md`
-- `.plans/copy-selected-tab-urls/plan.md`
+- Preview highlighted tabs before copying.
+- Copy from the popup with a visible result message.
+- Copy immediately with a configurable keyboard shortcut.
+- Process everything locally without analytics or network requests.
 
-## Planned behavior
+## Requirements
 
-- Preview highlighted tabs in a small extension popup.
-- Copy URLs in tab-strip order, one URL per line.
-- Copy immediately with a configurable Chrome extension shortcut.
-- Keep all processing local, with no analytics or network requests.
+Google Chrome 109 or later.
+
+## Install from source
+
+1. Download or clone this repository.
+2. Open `chrome://extensions`.
+3. Enable **Developer mode**.
+4. Select **Load unpacked**.
+5. Choose the repository directory containing `manifest.json`.
+
+Chrome displays the extension in the extensions menu. Pin it if you want the
+popup to remain visible in the toolbar.
+
+## Usage
+
+### Preview and copy
+
+1. Highlight tabs with Command-click on macOS, Ctrl-click on other platforms,
+   or Shift-click for a range.
+2. Open **Copy Selected Tab URLs** from the Chrome toolbar.
+3. Review the ordered list and select **Copy URLs**.
+
+The active tab is highlighted by default, so the same flow copies a single URL.
+Tabs whose URL is unavailable are omitted.
+
+### Copy with the keyboard
+
+Highlight the tabs and press:
+
+- macOS: `Command+Shift+L`
+- Other platforms: `Ctrl+Shift+L`
+
+The toolbar badge briefly shows the number of copied URLs. It shows `0` when no
+URL is available and `!` when copying fails.
+
+Chrome may leave a suggested shortcut unassigned when it conflicts with
+another command. Open `chrome://extensions/shortcuts` to review or change the
+binding.
+
+## Permissions
+
+| Permission | Why it is required |
+|---|---|
+| `tabs` | Read the titles, URLs, selection state, and order of highlighted tabs. |
+| `offscreen` | Create a hidden extension document for shortcut-driven clipboard access. |
+| `clipboardWrite` | Write the newline-separated URLs to the system clipboard. |
+
+The extension does not request host permissions or inject content scripts.
+
+## Privacy
+
+Selected tab titles and URLs stay on your device. The extension does not store,
+transmit, or analyze browsing data and does not make external requests.
+
+## Development and testing
+
+The extension uses dependency-free JavaScript and has no build step. Run the
+automated contract and behavior tests with:
+
+```sh
+npm test
+```
+
+After changing Chrome integration code, reload the unpacked extension at
+`chrome://extensions` and verify both the popup and keyboard flows.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance and
+[SECURITY.md](SECURITY.md) for reporting vulnerabilities.
+
+## Limitations
+
+- The output format is URL-only, one URL per line.
+- Tabs without an available URL are skipped.
+- Firefox is not supported.
+- The extension is installed unpacked; Chrome Web Store publishing is outside
+  the current project scope.
 
 ## License
 
-MIT
+[MIT](LICENSE)
