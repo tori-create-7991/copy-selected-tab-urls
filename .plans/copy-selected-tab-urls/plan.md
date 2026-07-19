@@ -206,12 +206,13 @@ Codex implementation task. Do not implement extension code on `main`.
 
 ## Final checkpoint
 
-- [x] `npm test` exits 0 (13 tests, 0 failures).
+- [x] `npm test` exits 0 (21 tests, 0 failures after PR review follow-up).
 - [ ] All popup and shortcut manual checks pass.
 - [x] `git diff --check` exits 0.
 - [x] No secrets, tokens, analytics, remote scripts, or unnecessary permissions
   are present.
-- [ ] The implementation branch is ready for review and a pull request.
+- [x] The implementation branch is ready for review and pull request
+  https://github.com/tori-create-7991/copy-selected-tab-urls/pull/1 is open.
 
 ## Risks
 

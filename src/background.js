@@ -93,9 +93,10 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
     return;
   }
 
+  let count;
+
   try {
-    const count = await copySelectedTabUrls(tab?.windowId);
-    await showBadge(String(count));
+    count = await copySelectedTabUrls(tab?.windowId);
   } catch (error) {
     console.error("Failed to copy selected tab URLs.", error);
 
@@ -104,5 +105,13 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
     } catch (badgeError) {
       console.error("Failed to show the error badge.", badgeError);
     }
+
+    return;
+  }
+
+  try {
+    await showBadge(String(count));
+  } catch (error) {
+    console.error("Failed to show the success badge.", error);
   }
 });

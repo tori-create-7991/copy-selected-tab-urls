@@ -118,7 +118,8 @@ test("shares one offscreen creation across concurrent commands", async () => {
   const secondCopy = background.listener("copy-selected-tab-urls", {
     windowId: 7,
   });
-  while (createCalls === 0) {
+
+  for (let attempt = 0; attempt < 10 && createCalls === 0; attempt += 1) {
     await Promise.resolve();
   }
 
@@ -157,6 +158,12 @@ test("serializes badge updates so only the latest clear timer remains", async ()
 
   assert.deepEqual(background.badgeWrites, ["1", "2"]);
   assert.equal(background.timers.size, 1);
+
+  const [clearLatestBadge] = background.timers.values();
+  clearLatestBadge();
+  await Promise.resolve();
+
+  assert.deepEqual(background.badgeWrites, ["1", "2", ""]);
 });
 
 test("logs an offscreen failure and shows an error badge", async () => {
@@ -172,4 +179,46 @@ test("logs an offscreen failure and shows an error badge", async () => {
   assert.equal(errors.length, 1);
   assert.match(errors[0][0], /copy selected tab URLs/i);
   assert.deepEqual(background.badgeWrites, ["!"]);
+});
+
+test("logs badge-clear failures without creating an unhandled rejection", async () => {
+  const errors = [];
+  const badgeWrites = [];
+  console.error = (...args) => errors.push(args);
+  const background = await loadBackground({
+    setBadgeText: async ({ text }) => {
+      badgeWrites.push(text);
+
+      if (text === "") {
+        throw new Error("badge unavailable");
+      }
+    },
+  });
+
+  await background.listener("copy-selected-tab-urls", { windowId: 7 });
+
+  const [clearBadge] = background.timers.values();
+  clearBadge();
+  await Promise.resolve();
+  await Promise.resolve();
+
+  assert.deepEqual(badgeWrites, ["0", ""]);
+  assert.equal(errors.length, 1);
+  assert.match(errors[0][0], /clear the badge/i);
+});
+
+test("reports a success-badge failure separately from copy failures", async () => {
+  const errors = [];
+  console.error = (...args) => errors.push(args);
+  const background = await loadBackground({
+    setBadgeText: async () => {
+      throw new Error("badge unavailable");
+    },
+  });
+
+  await background.listener("copy-selected-tab-urls", { windowId: 7 });
+
+  assert.equal(errors.length, 1);
+  assert.match(errors[0][0], /success badge/i);
+  assert.doesNotMatch(errors[0][0], /copy selected tab URLs/i);
 });

@@ -12,7 +12,8 @@
 
 Implementation and local automated verification are complete. Popup and
 offscreen clipboard integration passed in an isolated Chrome for Testing 149
-profile. The branch has not been pushed and no pull request has been created.
+profile. The branch is pushed and pull request
+https://github.com/tori-create-7991/copy-selected-tab-urls/pull/1 is open.
 
 ## Completed Work
 
@@ -26,7 +27,10 @@ profile. The branch has not been pushed and no pull request has been created.
   uses the Chrome-documented DOM selection copy pattern.
 - Added public README, contribution, security, privacy, permission, testing,
   and limitation documentation.
-- Created six focused local commits from `068a445` through `898faee`.
+- Addressed pre-PR and PR review findings for Chrome 109 compatibility,
+  optional command tab input, badge concurrency and clearing, diagnostic
+  logging, and behavior-level background tests.
+- Created nine focused commits, including the PR review follow-up.
 
 ## Pending Work
 
@@ -37,8 +41,8 @@ profile. The branch has not been pushed and no pull request has been created.
   practical Chrome tab/error fixture is available.
 - Manually follow the README's native **Load unpacked** directory chooser. The
   extension was loaded by an isolated Chrome for Testing launch instead.
-- Obtain approval before pushing `codex/copy-selected-tab-urls` or creating a
-  pull request.
+- Complete the remaining physical manual checks, then update the open pull
+  request with their result.
 
 ## Blockers / Decisions
 
@@ -50,7 +54,7 @@ profile. The branch has not been pushed and no pull request has been created.
 
 ## Verification
 
-- `npm test`: 13 tests passed, 0 failed after the offscreen fix.
+- `npm test`: 21 tests passed, 0 failed after the PR review follow-up.
 - Chrome for Testing `149.0.7827.55` loaded
   `src/background.js` with zero captured service-worker console errors.
 - Popup document: single-tab and three-tab display/status/system clipboard
@@ -65,5 +69,6 @@ profile. The branch has not been pushed and no pull request has been created.
 
 1. Read this handoff and the remaining unchecked plan items.
 2. Run the final verification commands fresh before any completion claim.
-3. Ask the user to choose the development-branch integration option.
-4. Before push or PR creation, show the exact commands and obtain approval.
+3. Manually verify the physical shortcut, clipboard result, and badge.
+4. Before any additional push or GitHub review post, show the exact action and
+   obtain approval.
