@@ -1,5 +1,7 @@
 # Copy Selected Tab URLs
 
+![Copy all icon](icons/copy_all-128.png)
+
 Copy the URLs of highlighted Chrome tabs, one per line and in tab-strip order.
 
 ## Features
