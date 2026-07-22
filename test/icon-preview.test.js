@@ -15,5 +15,9 @@ test("presents selectable Material icon candidates for the extension", async () 
   assert.match(html, /<fieldset/);
   assert.match(html, /type="radio"/);
   assert.match(html, /<input id="copy-all" name="icon" type="radio" checked>/);
+  assert.match(
+    html,
+    /\.material-symbols-rounded\s*\{[\s\S]*color:\s*#5f6368;/,
+  );
   assert.match(html, /:focus-visible/);
 });
