@@ -10,7 +10,13 @@
     "clipboardWrite"
   ],
   "action": {
-    "default_popup": "src/popup.html"
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "icons/copy_all-16.png",
+      "32": "icons/copy_all-32.png",
+      "48": "icons/copy_all-48.png",
+      "128": "icons/copy_all-128.png"
+    }
   },
   "background": {
     "service_worker": "src/background.js",
