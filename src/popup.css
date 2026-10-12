@@ -82,4 +82,5 @@ button:focus-visible {
   margin: 0;
   color: GrayText;
   font-size: 0.8rem;
+  line-height: 1.4;
 }
