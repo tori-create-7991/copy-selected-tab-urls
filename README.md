@@ -60,7 +60,19 @@ binding.
 | `offscreen` | Create a hidden extension document for shortcut-driven clipboard access. |
 | `clipboardWrite` | Write the newline-separated URLs to the system clipboard. |
 
-The extension does not request host permissions or inject content scripts.
+The extension does not request required host permissions or inject content
+scripts. It declares optional access to `file://` URLs for the local-file
+opening feature described below.
+
+The popup also requests `clipboardRead` so **Open copied URLs** can read the
+URL list after you select that action. Chrome labels this permission as access
+to data you copy and paste. The extension does not read the clipboard in the
+background.
+
+Opening `file://` URLs requires **Allow access to file URLs** on the extension's
+Details page at `chrome://extensions`. When access is off, those entries are
+skipped and the popup explains how to enable it. The extension opens the file
+URL as a Chrome tab; it does not read the file contents.
 
 ## Privacy
 
@@ -86,6 +98,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance and
 
 - The output format is URL-only, one URL per line.
 - Tabs without an available URL are skipped.
+- Only `http:`, `https:`, and permitted `file:` URLs are opened from the
+  clipboard. Blank, invalid, and unsupported-scheme lines are skipped.
 - Firefox is not supported.
 - The extension is installed unpacked; Chrome Web Store publishing is outside
   the current project scope.

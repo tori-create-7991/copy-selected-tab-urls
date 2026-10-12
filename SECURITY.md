@@ -18,3 +18,12 @@ Use this repository's GitHub private vulnerability reporting form and include:
 Please allow the maintainers time to investigate and coordinate a fix before
 publishing details. Non-sensitive bugs and feature requests can use the public
 issue tracker.
+
+## Extension permissions
+
+The popup uses Chrome's `clipboardRead` permission only after you choose
+**Open copied URLs**. The extension parses newline-separated entries and opens
+only `http:`, `https:`, and allowed `file:` URLs in tabs. It does not transmit
+clipboard contents or read the contents of local files. Chrome must have
+**Allow access to file URLs** enabled for this extension before `file://`
+entries can be opened; otherwise those entries are skipped.
