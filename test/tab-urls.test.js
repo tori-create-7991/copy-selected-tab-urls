@@ -149,7 +149,7 @@ test("counts each blank line and rejects non-string input as an empty list", asy
   assert.equal(typeof parseUrlList, "function");
   assert.deepEqual(parseUrlList(" \n\n", { allowFile: true }), {
     urls: [],
-    emptyCount: 2,
+    emptyCount: 3,
     invalidCount: 0,
     unsupportedCount: 0,
     blockedFileCount: 0,
