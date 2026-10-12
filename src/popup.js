@@ -68,7 +68,7 @@ openButton.addEventListener("click", async () => {
     clipboardText = await navigator.clipboard.readText();
   } catch (error) {
     console.error("Failed to read clipboard text.", error);
-    status.textContent = "Could not read clipboard. Check clipboard access and retry.";
+    status.textContent = "Could not read clipboard. Check this extension's clipboard permission and retry.";
     openButton.disabled = false;
     return;
   }
@@ -79,14 +79,17 @@ openButton.addEventListener("click", async () => {
     return;
   }
 
-  let allowFile;
-  try {
-    allowFile = await chrome.extension.isAllowedFileSchemeAccess();
-  } catch (error) {
-    console.error("Failed to check file URL access.", error);
-    status.textContent = "Could not check access to local file URLs.";
-    openButton.disabled = false;
-    return;
+  const candidates = parseUrlList(clipboardText, { allowFile: true });
+  const hasFileUrls = candidates.urls.some((url) => url.startsWith("file:"));
+  let allowFile = false;
+  let fileAccessCheckFailed = false;
+  if (hasFileUrls) {
+    try {
+      allowFile = await chrome.extension.isAllowedFileSchemeAccess();
+    } catch (error) {
+      console.error("Failed to check file URL access.", error);
+      fileAccessCheckFailed = true;
+    }
   }
 
   const parsed = parseUrlList(clipboardText, { allowFile });
@@ -141,11 +144,16 @@ openButton.addEventListener("click", async () => {
     );
   }
   if (parsed.blockedFileCount > 0) {
-    messages.push(
-      `Skipped ${parsed.blockedFileCount} local ${
-        parsed.blockedFileCount === 1 ? "file URL" : "file URLs"
-      }. Allow access to file URLs in this extension's Details page.`,
-    );
+    const fileUrlLabel = parsed.blockedFileCount === 1 ? "file URL" : "file URLs";
+    if (fileAccessCheckFailed) {
+      messages.push(
+        `Could not confirm access to ${parsed.blockedFileCount} local ${fileUrlLabel}; skipped them.`,
+      );
+    } else {
+      messages.push(
+        `Skipped ${parsed.blockedFileCount} local ${fileUrlLabel}. Allow access to file URLs in this extension's Details page.`,
+      );
+    }
   }
   if (failedCount > 0) {
     messages.push(

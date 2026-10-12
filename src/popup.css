@@ -84,3 +84,9 @@ button:focus-visible {
   font-size: 0.8rem;
   line-height: 1.4;
 }
+
+#open-help {
+  margin: -8px 0 0;
+  color: GrayText;
+  font-size: 0.8rem;
+}

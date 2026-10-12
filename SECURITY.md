@@ -21,9 +21,12 @@ issue tracker.
 
 ## Extension permissions
 
-The popup uses Chrome's `clipboardRead` permission only after you choose
-**Open copied URLs**. The extension parses newline-separated entries and opens
-only `http:`, `https:`, and allowed `file:` URLs in tabs. It does not transmit
-clipboard contents or read the contents of local files. Chrome must have
-**Allow access to file URLs** enabled for this extension before `file://`
-entries can be opened; otherwise those entries are skipped.
+The manifest declares Chrome's `clipboardRead` permission, which may appear in
+the extension permission warning. The popup reads the clipboard only after you
+choose **Open copied URLs**. It parses newline-separated entries and opens
+only `http:`, `https:`, and allowed `file:` URLs in tabs. The extension does
+not send clipboard contents to an extension server or read local file
+contents. When an HTTP(S) URL is opened, Chrome connects to that website as
+usual. Chrome must have **Allow access to file URLs** enabled for this
+extension before `file://` entries can be opened; otherwise those entries are
+skipped.

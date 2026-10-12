@@ -9,7 +9,8 @@ Copy the URLs of highlighted Chrome tabs, one per line and in tab-strip order.
 - Preview highlighted tabs before copying.
 - Copy from the popup with a visible result message.
 - Copy immediately with a configurable keyboard shortcut.
-- Process everything locally without analytics or network requests.
+- Parse the copied list locally without analytics or extension-server transfers.
+- Chrome loads each opened HTTP(S) URL normally, connecting to that website.
 
 ## Requirements
 
@@ -59,15 +60,17 @@ binding.
 | `tabs` | Read the titles, URLs, selection state, and order of highlighted tabs. |
 | `offscreen` | Create a hidden extension document for shortcut-driven clipboard access. |
 | `clipboardWrite` | Write the newline-separated URLs to the system clipboard. |
+| `clipboardRead` | Read the clipboard after you select **Open copied URLs**. |
+| Optional `file:///*` host permission | Let Chrome expose its **Allow access to file URLs** setting for local URL handling. |
 
 The extension does not request required host permissions or inject content
 scripts. It declares optional access to `file://` URLs for the local-file
 opening feature described below.
 
-The popup also requests `clipboardRead` so **Open copied URLs** can read the
-URL list after you select that action. Chrome labels this permission as access
-to data you copy and paste. The extension does not read the clipboard in the
-background.
+The manifest declares `clipboardRead`, which Chrome may show in its extension
+permission warning. The popup reads the clipboard only when you select **Open
+copied URLs**; it does not read the clipboard in the background. Chrome labels
+this permission as access to data you copy and paste.
 
 Opening `file://` URLs requires **Allow access to file URLs** on the extension's
 Details page at `chrome://extensions`. When access is off, those entries are
@@ -76,8 +79,10 @@ URL as a Chrome tab; it does not read the file contents.
 
 ## Privacy
 
-Selected tab titles and URLs stay on your device. The extension does not store,
-transmit, or analyze browsing data and does not make external requests.
+The extension does not store or analyze selected tab titles, URLs, or clipboard
+contents, and does not send them to an extension server. When you open HTTP(S)
+URLs, Chrome connects to the requested websites as usual. The extension does
+not read local file contents.
 
 ## Development and testing
 
