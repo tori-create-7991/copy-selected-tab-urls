@@ -99,3 +99,66 @@ test("works when Array.prototype.toSorted is unavailable", async () => {
     Array.prototype.toSorted = originalToSorted;
   }
 });
+
+test("keeps supported URL lines in order and preserves duplicates", async () => {
+  const { parseUrlList } = await loadTabUrls();
+  const input = [
+    "  https://example.com/first  ",
+    "file:///tmp/notes.txt",
+    "http://example.com/second",
+    "https://example.com/first",
+  ].join("\r\n");
+
+  assert.equal(typeof parseUrlList, "function");
+  assert.deepEqual(parseUrlList(input, { allowFile: true }), {
+    urls: [
+      "https://example.com/first",
+      "file:///tmp/notes.txt",
+      "http://example.com/second",
+      "https://example.com/first",
+    ],
+    emptyCount: 0,
+    invalidCount: 0,
+    unsupportedCount: 0,
+    blockedFileCount: 0,
+  });
+});
+
+test("counts empty invalid unsupported and blocked file URL lines", async () => {
+  const { parseUrlList } = await loadTabUrls();
+  const input = [
+    "",
+    "not a URL",
+    "ftp://example.com/archive.zip",
+    "file:///tmp/notes.txt",
+  ].join("\n");
+
+  assert.equal(typeof parseUrlList, "function");
+  assert.deepEqual(parseUrlList(input, { allowFile: false }), {
+    urls: [],
+    emptyCount: 1,
+    invalidCount: 1,
+    unsupportedCount: 1,
+    blockedFileCount: 1,
+  });
+});
+
+test("counts each blank line and rejects non-string input as an empty list", async () => {
+  const { parseUrlList } = await loadTabUrls();
+
+  assert.equal(typeof parseUrlList, "function");
+  assert.deepEqual(parseUrlList(" \n\n", { allowFile: true }), {
+    urls: [],
+    emptyCount: 2,
+    invalidCount: 0,
+    unsupportedCount: 0,
+    blockedFileCount: 0,
+  });
+  assert.deepEqual(parseUrlList(null, { allowFile: true }), {
+    urls: [],
+    emptyCount: 0,
+    invalidCount: 0,
+    unsupportedCount: 0,
+    blockedFileCount: 0,
+  });
+});
