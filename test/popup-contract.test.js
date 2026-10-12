@@ -20,6 +20,10 @@ test("provides the popup preview and accessible copy controls", async () => {
   assert.match(html, /<script[^>]+type="module"[^>]+src="popup\.js"/);
   assert.match(html, /<ul[^>]+id="tab-list"/);
   assert.match(html, /<button[^>]+id="copy-button"[^>]*>[\s\S]*Copy URLs/);
+  assert.match(
+    html,
+    /<button[^>]+id="open-button"[^>]*>[\s\S]*Open copied URLs/,
+  );
   assert.match(html, /id="status"[^>]+role="status"[^>]+aria-live="polite"/);
 });
 
@@ -34,6 +38,20 @@ test("queries highlighted tabs and copies only after a button click", async () =
   assert.match(script, /navigator\.clipboard\.writeText\(payload\)/);
   assert.doesNotMatch(script, /\.innerHTML\s*=/);
   assert.match(script, /\.textContent\s*=/);
+});
+
+test("reads copied URLs on click and opens inactive tabs in the current window", async () => {
+  const script = await readSource("../src/popup.js");
+
+  assert.match(script, /openButton\.addEventListener\("click"/);
+  assert.match(script, /navigator\.clipboard\.readText\(\)/);
+  assert.match(script, /chrome\.extension\.isAllowedFileSchemeAccess\(\)/);
+  assert.match(script, /parseUrlList\(/);
+  assert.match(script, /chrome\.tabs\.create\(/);
+  assert.match(script, /windowId/);
+  assert.match(script, /active:\s*false/);
+  assert.match(script, /index:/);
+  assert.doesNotMatch(script, /\.innerHTML\s*=/);
 });
 
 test("provides visible keyboard focus styling", async () => {

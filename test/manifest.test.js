@@ -46,7 +46,9 @@ test("declares the approved Manifest V3 extension contract", async () => {
     "tabs",
     "offscreen",
     "clipboardWrite",
+    "clipboardRead",
   ]);
+  assert.deepEqual(manifest.optional_host_permissions, ["file:///*"]);
   assert.deepEqual(manifest.commands?.["copy-selected-tab-urls"], {
     suggested_key: {
       default: "Ctrl+Shift+L",
