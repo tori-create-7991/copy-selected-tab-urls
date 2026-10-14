@@ -143,6 +143,18 @@ test("counts empty invalid unsupported and blocked file URL lines", async () => 
   });
 });
 
+test("rejects file URLs with a non-local host", async () => {
+  const { parseUrlList } = await loadTabUrls();
+
+  assert.deepEqual(parseUrlList("file://server/share/notes.txt", { allowFile: true }), {
+    urls: [],
+    emptyCount: 0,
+    invalidCount: 0,
+    unsupportedCount: 1,
+    blockedFileCount: 0,
+  });
+});
+
 test("counts each blank line and rejects non-string input as an empty list", async () => {
   const { parseUrlList } = await loadTabUrls();
 

@@ -11,10 +11,13 @@ async function runOpenClick({
   clipboardReadError,
   activeTabQueryError,
   activeTabMissing = false,
+  activeTabIndex = 3,
+  pinnedTabCount = 0,
   failedCreateUrls = [],
 }) {
   const elements = new Map();
   const createdTabs = [];
+  const createRequests = [];
   const queries = [];
   const originalConsoleError = console.error;
   const originalGlobals = new Map(
@@ -56,14 +59,16 @@ async function runOpenClick({
           throw activeTabQueryError;
         }
 
-        return activeTabMissing ? [] : [{ index: 3, windowId: 7 }];
+        return activeTabMissing ? [] : [{ index: activeTabIndex, windowId: 7 }];
       },
       async create(tab) {
+        createRequests.push(tab);
         if (failedCreateUrls.includes(tab.url)) {
           throw new Error("tab creation failed");
         }
-        createdTabs.push(tab);
-        return tab;
+        const createdTab = { ...tab, index: Math.max(tab.index, pinnedTabCount) };
+        createdTabs.push(createdTab);
+        return createdTab;
       },
     },
     extension: {
@@ -96,6 +101,7 @@ async function runOpenClick({
     await elements.get("#open-button").listeners.get("click")();
     return {
       createdTabs,
+      createRequests,
       queries,
       status: elements.get("#status").textContent,
     };
@@ -165,7 +171,7 @@ test("reads copied URLs on click and opens inactive tabs in the current window",
 });
 
 test("opens copied URLs in order while preserving duplicates and active focus", async () => {
-  const { createdTabs, status } = await runOpenClick({
+  const { createdTabs, createRequests, status } = await runOpenClick({
     clipboardText: [
       "https://example.com/first",
       "file:///tmp/notes.txt",
@@ -183,11 +189,41 @@ test("opens copied URLs in order while preserving duplicates and active focus", 
     ],
   );
   assert.deepEqual(
-    createdTabs.map(({ index }) => index),
+    createRequests.map(({ index }) => index),
     [4, 5, 6],
   );
+  assert.deepEqual(createdTabs.map(({ index }) => index), [4, 5, 6]);
   assert.ok(createdTabs.every(({ active, windowId }) => !active && windowId === 7));
   assert.equal(status, "Opened 3 URLs.");
+});
+
+test("preserves URL order when the active tab is among pinned tabs", async () => {
+  const { createdTabs, createRequests } = await runOpenClick({
+    clipboardText: [
+      "https://example.com/first",
+      "https://example.com/second",
+      "https://example.com/third",
+    ].join("\n"),
+    activeTabIndex: 0,
+    pinnedTabCount: 2,
+  });
+
+  assert.deepEqual(
+    createRequests.map(({ index }) => index),
+    [1, 3, 4],
+  );
+  assert.deepEqual(
+    createdTabs.map(({ index }) => index),
+    [2, 3, 4],
+  );
+  assert.deepEqual(
+    createdTabs.map(({ url }) => url),
+    [
+      "https://example.com/first",
+      "https://example.com/second",
+      "https://example.com/third",
+    ],
+  );
 });
 
 test("skips copied file URLs when file URL access is disabled", async () => {

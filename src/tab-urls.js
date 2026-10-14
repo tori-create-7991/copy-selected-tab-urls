@@ -39,7 +39,9 @@ export function parseUrlList(input, { allowFile = false } = {}) {
     }
 
     if (url.protocol === "file:") {
-      if (allowFile) {
+      if (url.host.length > 0) {
+        result.unsupportedCount += 1;
+      } else if (allowFile) {
         result.urls.push(url.href);
       } else {
         result.blockedFileCount += 1;

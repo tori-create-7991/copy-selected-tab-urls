@@ -112,14 +112,14 @@ openButton.addEventListener("click", async () => {
       let nextIndex = activeTab.index + 1;
       for (const url of parsed.urls) {
         try {
-          await chrome.tabs.create({
+          const createdTab = await chrome.tabs.create({
             windowId: activeTab.windowId,
             index: nextIndex,
             url,
             active: false,
           });
           openedCount += 1;
-          nextIndex += 1;
+          nextIndex = createdTab.index + 1;
         } catch {
           failedCount += 1;
         }
