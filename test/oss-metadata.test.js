@@ -15,7 +15,17 @@ test("keeps third-party icon licensing and internal planning metadata out of pub
     readSource("../README.md"),
   ]);
 
-  assert.doesNotMatch(agents, /app\.notion\.com|notion_task_url|\.plans\//);
+  // The evolve loop reads its settings (including notion_task_url) from this
+  // block, so it is the only part of AGENTS.md allowed to mention Notion.
+  const agentsWithoutEvolveConfig = agents.replace(
+    /<!-- @evolve-config[\s\S]*?-->/,
+    "",
+  );
+
+  assert.doesNotMatch(
+    agentsWithoutEvolveConfig,
+    /app\.notion\.com|notion_task_url|\.plans\//,
+  );
   assert.match(gitignore, /^\.plans\/$/m);
   assert.match(notices, /Google Material Design Icons/);
   assert.match(notices, /Apache-2\.0/);
