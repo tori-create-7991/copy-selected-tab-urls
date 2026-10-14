@@ -11,6 +11,10 @@
       <h1>Selected tabs</h1>
       <ul id="tab-list" aria-label="Selected tabs"></ul>
       <button id="copy-button" type="button" disabled>Copy URLs</button>
+      <button id="open-button" type="button" aria-describedby="open-help">
+        Open copied URLs
+      </button>
+      <p id="open-help">Reads the clipboard and opens one URL per line in background tabs.</p>
       <p id="status" role="status" aria-live="polite">Loading selected tabs…</p>
     </main>
     <script type="module" src="popup.js"></script>
