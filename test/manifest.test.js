@@ -23,7 +23,21 @@ test("declares the approved Manifest V3 extension contract", async () => {
 
   assert.ok(manifest, "manifest.json should exist");
   assert.equal(manifest.manifest_version, 3);
-  assert.equal(manifest.action?.default_popup, "src/popup.html");
+  assert.deepEqual(manifest.icons, {
+    16: "icons/copy_all-16.png",
+    32: "icons/copy_all-32.png",
+    48: "icons/copy_all-48.png",
+    128: "icons/copy_all-128.png",
+  });
+  assert.deepEqual(manifest.action, {
+    default_popup: "src/popup.html",
+    default_icon: {
+      16: "icons/copy_all-16.png",
+      32: "icons/copy_all-32.png",
+      48: "icons/copy_all-48.png",
+      128: "icons/copy_all-128.png",
+    },
+  });
   assert.deepEqual(manifest.background, {
     service_worker: "src/background.js",
     type: "module",

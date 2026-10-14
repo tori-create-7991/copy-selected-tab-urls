@@ -1,5 +1,7 @@
 # Copy Selected Tab URLs
 
+![Copy all icon](icons/copy_all-128.png)
+
 Copy the URLs of highlighted Chrome tabs, one per line and in tab-strip order.
 
 ## Features
@@ -90,4 +92,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance and
 
 ## License
 
-[MIT](LICENSE)
+Project source is [MIT](LICENSE). The `copy_all` icon assets are Apache-2.0;
+see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

@@ -4,8 +4,6 @@ Before making changes, read every file in `~/.agents/rules/*.md`.
 
 For this project:
 
-- Read `.plans/copy-selected-tab-urls/handoff.md` before starting.
-- Follow `.plans/copy-selected-tab-urls/plan.md` task by task.
 - Treat `docs/design/copy-selected-tab-urls.md` and
   `docs/adr/0001-use-manifest-v3-with-offscreen-clipboard.md` as approved.
 - Use Manifest V3 and dependency-free JavaScript.

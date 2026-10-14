@@ -1,4 +1,5 @@
 .DS_Store
+.plans/
 coverage/
 node_modules/
 *.zip
