@@ -12,3 +12,11 @@ For this project:
   test, then refactor.
 - Do not add Markdown copy formats, a settings page, Firefox support, analytics,
   or Chrome Web Store publishing in the initial implementation.
+
+<!-- @evolve-config
+roadmap_path: docs/ROADMAP.md
+notion_task_url: https://www.notion.so/3a52f5910ab7813fafc2de766fc8889e
+test_command: npm test
+automerge: false
+loop_interval: 2h
+-->
